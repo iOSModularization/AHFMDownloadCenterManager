@@ -7,8 +7,9 @@
 //
 
 import Foundation
+import AHServiceRouter
 import AHFMModuleManager
-
+import AHFMDownloadCenterServices
 
 public struct AHFMDownloadCenterManager: AHFMModuleManager {
     public static func activate() {
