@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'AHFMDownloadCenterManager'
-  s.version          = '0.1.0'
+  s.version          = '0.1.1'
   s.summary          = 'A short description of AHFMDownloadCenterManager.'
 
 # This description is used to generate tags and improve search results.
@@ -39,6 +39,8 @@ TODO: Add long description of the pod here.
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
   # s.dependency 'AFNetworking', '~> 2.3'
+
+s.dependency 'AHFMModuleManager'
 
 s.dependency 'AHFMDownloadCenterServices'
 s.dependency 'AHFMDownloadListServices'

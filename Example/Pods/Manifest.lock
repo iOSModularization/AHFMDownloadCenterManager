@@ -12,12 +12,14 @@ PODS:
     - AHFMDataTransformers
     - AHFMDownloadCenterServices
     - AHFMDownloadListServices
+    - AHFMModuleManager
     - AHFMNetworking
     - AHServiceRouter
   - AHFMDownloadCenterServices (0.1.0):
     - AHFMServices
   - AHFMDownloadListServices (0.1.0):
     - AHFMServices
+  - AHFMModuleManager (0.2.0)
   - AHFMNetworking (0.1.2):
     - Alamofire (~> 4.4)
     - KeychainAccess (~> 3.0.2)
@@ -40,9 +42,10 @@ SPEC CHECKSUMS:
   AHDownloadTool: 6cc35cb56f0ee956df5b0d225e1b1d66059b7342
   AHFMDataCenter: 1ed58c19944bb34ba1ad83c20f2e1c01d4f7291f
   AHFMDataTransformers: eafcb87a307fbd52ccd61917fa5de1aff6a7bd53
-  AHFMDownloadCenterManager: 03829d02955621d8a50801b26f78357ac993d37a
+  AHFMDownloadCenterManager: 5c88940648e6f9f47e4e15cacb1dac6acd169938
   AHFMDownloadCenterServices: 23cf7d1977796512206391c344b8b1e95d1e3b05
   AHFMDownloadListServices: 5409157c9dfe981f7f88027672d217ba505ed9ba
+  AHFMModuleManager: 301c8a5945a301528d5cba55e4809428ef896141
   AHFMNetworking: e2b524c569fc4ec0f2583ac607f355a22fe1a46f
   AHFMServices: 7c2c52fd7bd0b604fdab05cc9adb13129c218b60
   AHServiceRouter: 665bd7a43fc58632477dfea53d6850043224cbd9
