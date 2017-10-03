@@ -1,0 +1,45 @@
+{
+  "name": "AHFMDownloadCenterManager",
+  "version": "0.1.0",
+  "summary": "A short description of AHFMDownloadCenterManager.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/iOSModularization/AHFMDownloadCenterManager",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "ivsall2012": "ivsall2012@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/iOSModularization/AHFMDownloadCenterManager.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "AHFMDownloadCenterManager/Classes/**/*",
+  "dependencies": {
+    "AHFMDownloadCenterServices": [
+
+    ],
+    "AHFMDownloadListServices": [
+
+    ],
+    "AHFMDataCenter": [
+
+    ],
+    "AHFMNetworking": [
+
+    ],
+    "AHFMDataTransformers": [
+
+    ],
+    "AHServiceRouter": [
+
+    ],
+    "AHDownloadTool": [
+
+    ]
+  }
+}

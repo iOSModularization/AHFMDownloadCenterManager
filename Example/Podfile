@@ -1,5 +1,9 @@
 use_frameworks!
 
+source 'https://github.com/iOSModularization/AHFMSpecs.git'
+source 'https://github.com/CocoaPods/Specs.git'
+
+
 target 'AHFMDownloadCenterManager_Example' do
   pod 'AHFMDownloadCenterManager', :path => '../'
 

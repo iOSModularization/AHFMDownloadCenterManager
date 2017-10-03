@@ -1,0 +1,56 @@
+PODS:
+  - AHDataModel (0.3.2)
+  - AHDownloadTool (0.1.9)
+  - AHFMDataCenter (0.1.2):
+    - AHDataModel
+    - UIDeviceExtension
+  - AHFMDataTransformers (0.1.0):
+    - SwiftyJSON
+  - AHFMDownloadCenterManager (0.1.0):
+    - AHDownloadTool
+    - AHFMDataCenter
+    - AHFMDataTransformers
+    - AHFMDownloadCenterServices
+    - AHFMDownloadListServices
+    - AHFMNetworking
+    - AHServiceRouter
+  - AHFMDownloadCenterServices (0.1.0):
+    - AHFMServices
+  - AHFMDownloadListServices (0.1.0):
+    - AHFMServices
+  - AHFMNetworking (0.1.2):
+    - Alamofire (~> 4.4)
+    - KeychainAccess (~> 3.0.2)
+  - AHFMServices (0.3.0)
+  - AHServiceRouter (0.3.0)
+  - Alamofire (4.5.1)
+  - KeychainAccess (3.0.2)
+  - SwiftyJSON (3.1.4)
+  - UIDeviceExtension (0.1.0)
+
+DEPENDENCIES:
+  - AHFMDownloadCenterManager (from `../`)
+
+EXTERNAL SOURCES:
+  AHFMDownloadCenterManager:
+    :path: ../
+
+SPEC CHECKSUMS:
+  AHDataModel: 7b7b1eb705740862fecce8413008ed137dc2c8d2
+  AHDownloadTool: 6cc35cb56f0ee956df5b0d225e1b1d66059b7342
+  AHFMDataCenter: 1ed58c19944bb34ba1ad83c20f2e1c01d4f7291f
+  AHFMDataTransformers: eafcb87a307fbd52ccd61917fa5de1aff6a7bd53
+  AHFMDownloadCenterManager: 03829d02955621d8a50801b26f78357ac993d37a
+  AHFMDownloadCenterServices: 23cf7d1977796512206391c344b8b1e95d1e3b05
+  AHFMDownloadListServices: 5409157c9dfe981f7f88027672d217ba505ed9ba
+  AHFMNetworking: e2b524c569fc4ec0f2583ac607f355a22fe1a46f
+  AHFMServices: 7c2c52fd7bd0b604fdab05cc9adb13129c218b60
+  AHServiceRouter: 665bd7a43fc58632477dfea53d6850043224cbd9
+  Alamofire: 2d95912bf4c34f164fdfc335872e8c312acaea4a
+  KeychainAccess: a986406022dfc7c634c691ad3bec670cc6a32002
+  SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
+  UIDeviceExtension: 53d1d2177714a3e434e755b6c0fb66678595fce4
+
+PODFILE CHECKSUM: d2218c383cefeff04d4bea8e3d8e693d85165e37
+
+COCOAPODS: 1.3.0.beta.2
