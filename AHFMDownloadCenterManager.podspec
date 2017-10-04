@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'AHFMDownloadCenterManager'
-  s.version          = '0.1.2'
+  s.version          = '0.1.3'
   s.summary          = 'A short description of AHFMDownloadCenterManager.'
 
 # This description is used to generate tags and improve search results.
@@ -44,6 +44,8 @@ s.dependency 'AHFMModuleManager'
 
 s.dependency 'AHFMDownloadCenterServices'
 s.dependency 'AHFMDownloadListServices'
+
+s.dependency 'AHFMAudioPlayerVCServices'
 
 s.dependency 'AHFMDataCenter'
 s.dependency 'AHFMNetworking'

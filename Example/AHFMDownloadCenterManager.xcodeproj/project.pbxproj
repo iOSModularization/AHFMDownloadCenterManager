@@ -306,6 +306,7 @@
 				"${SRCROOT}/Pods/Target Support Files/Pods-AHFMDownloadCenterManager_Example/Pods-AHFMDownloadCenterManager_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AHDataModel/AHDataModel.framework",
 				"${BUILT_PRODUCTS_DIR}/AHDownloadTool/AHDownloadTool.framework",
+				"${BUILT_PRODUCTS_DIR}/AHFMAudioPlayerVCServices/AHFMAudioPlayerVCServices.framework",
 				"${BUILT_PRODUCTS_DIR}/AHFMDataCenter/AHFMDataCenter.framework",
 				"${BUILT_PRODUCTS_DIR}/AHFMDataTransformers/AHFMDataTransformers.framework",
 				"${BUILT_PRODUCTS_DIR}/AHFMDownloadCenterManager/AHFMDownloadCenterManager.framework",
@@ -324,6 +325,7 @@
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AHDataModel.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AHDownloadTool.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AHFMAudioPlayerVCServices.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AHFMDataCenter.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AHFMDataTransformers.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AHFMDownloadCenterManager.framework",

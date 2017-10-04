@@ -1,13 +1,16 @@
 PODS:
   - AHDataModel (0.3.2)
   - AHDownloadTool (0.1.9)
+  - AHFMAudioPlayerVCServices (0.1.0):
+    - AHFMServices
   - AHFMDataCenter (0.1.2):
     - AHDataModel
     - UIDeviceExtension
   - AHFMDataTransformers (0.1.0):
     - SwiftyJSON
-  - AHFMDownloadCenterManager (0.1.0):
+  - AHFMDownloadCenterManager (0.1.2):
     - AHDownloadTool
+    - AHFMAudioPlayerVCServices
     - AHFMDataCenter
     - AHFMDataTransformers
     - AHFMDownloadCenterServices
@@ -40,9 +43,10 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AHDataModel: 7b7b1eb705740862fecce8413008ed137dc2c8d2
   AHDownloadTool: 6cc35cb56f0ee956df5b0d225e1b1d66059b7342
+  AHFMAudioPlayerVCServices: 27bdded45ce340f6bf0265264e64ee2fd26f6d57
   AHFMDataCenter: 1ed58c19944bb34ba1ad83c20f2e1c01d4f7291f
   AHFMDataTransformers: eafcb87a307fbd52ccd61917fa5de1aff6a7bd53
-  AHFMDownloadCenterManager: 5c88940648e6f9f47e4e15cacb1dac6acd169938
+  AHFMDownloadCenterManager: 3b027141da3706a2427da9b9d9b0b4da164a8262
   AHFMDownloadCenterServices: 23cf7d1977796512206391c344b8b1e95d1e3b05
   AHFMDownloadListServices: 5409157c9dfe981f7f88027672d217ba505ed9ba
   AHFMModuleManager: 301c8a5945a301528d5cba55e4809428ef896141

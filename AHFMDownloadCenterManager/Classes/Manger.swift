@@ -11,6 +11,7 @@ import AHFMDataCenter
 import AHFMNetworking
 import AHFMDataTransformers
 import AHFMDownloadListServices
+import AHFMAudioPlayerVCServices
 import AHServiceRouter
 import AHDownloadTool
 
@@ -48,7 +49,13 @@ extension Manager {
     }
     
     func downloadedVCShowPage(_ vc: UIViewController, didSelectEpisode episodeId: Int, showId: Int){
-        print("should go to AHFMAudioPlayerVC")
+        var type: AHServiceNavigationType
+        if vc.navigationController != nil {
+            type = .push(navVC: vc.navigationController!)
+        }else{
+            type = .presentWithNavVC(currentVC: vc)
+        }
+        AHServiceRouter.navigateVC(AHFMAudioPlayerVCServices.service, taskName: AHFMAudioPlayerVCServices.taskNavigation, userInfo: [AHFMAudioPlayerVCServices.keyTrackId: episodeId], type: type, completion: nil)
     }
     
     func downloadedVCShowPage(_ vc: UIViewController, didSelectDownloadMoreForShow showId: Int){

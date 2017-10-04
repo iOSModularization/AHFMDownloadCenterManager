@@ -1,6 +1,6 @@
 {
   "name": "AHFMDownloadCenterManager",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "summary": "A short description of AHFMDownloadCenterManager.",
   "description": "TODO: Add long description of the pod here.",
   "homepage": "https://github.com/iOSModularization/AHFMDownloadCenterManager",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/iOSModularization/AHFMDownloadCenterManager.git",
-    "tag": "0.1.0"
+    "tag": "0.1.2"
   },
   "platforms": {
     "ios": "8.0"
@@ -27,6 +27,9 @@
 
     ],
     "AHFMDownloadListServices": [
+
+    ],
+    "AHFMAudioPlayerVCServices": [
 
     ],
     "AHFMDataCenter": [
