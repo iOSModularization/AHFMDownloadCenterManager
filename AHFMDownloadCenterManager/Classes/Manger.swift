@@ -25,21 +25,53 @@ class Manager: NSObject {
     
 }
 
+//MARK:- From downloadCenter itslef
+extension Manager {
+    /// Call loadTotalNumbOfTasks:
+    func downloadCenter(_ vc: UIViewController, shouldCountTaskWithCurrentTasks urls: [String]) {
+        DispatchQueue.global().async {
+            var count = 0
+            let urls = urls
+            let epInfoArr = AHFMEpisodeInfo.query("downloadedProgress", ">", 0.0).AND("downloadedProgress", "<", 100.0).run()
+            for epInfo in epInfoArr {
+                if urls.count > 0 {
+                    let eps = AHFMEpisode.query("id", "=", epInfo.id).AND("audioURL", "NOT IN", urls).run()
+                    if eps.count > 0, let _ = eps.first {
+                        count += 1
+                    }
+                }else{
+                    count += 1
+                }
+            }
+            count += urls.count
+            DispatchQueue.main.async {
+                vc.perform(Selector(("loadTotalNumbOfTasks:")), with: ["count": count])
+            }
+        }
+    }
+}
+
 //MARK:- From downloadedVC and showPage
 extension Manager {
     /// Call loadEpisodesForShow(_:) when data is ready
     func downloadedShowPageVC(_ vc: UIViewController, shouldLoadEpisodesForShow showId: Int){
-        // NO networking involved since those episodes are supposed to be downloaded alrady.
-        let eps = AHFMEpisode.query("showId", "=", showId).run()
-        if eps.count > 0 {
+
+        DispatchQueue.global().async {
+            let eps = AHFMEpisode.query("showId", "=", showId).run()
             var arrDict = [[String: Any]]()
-            for ep in eps {
-                let dict = self.merge(ep: ep, epInfo: nil)
-                arrDict.append(dict)
+            if eps.count > 0 {
+                for ep in eps {
+                    let epInfos = AHFMEpisodeInfo.query("id", "=", ep.id).AND("downloadedProgress", "=", 100.0).run()
+                    if let epInfo = epInfos.first {
+                        let dict = self.merge(ep: ep, epInfo: epInfo)
+                        arrDict.append(dict)
+                    }
+                    
+                }
             }
-            vc.perform(Selector(("loadEpisodesForShow:")), with: arrDict)
-        }else{
-             vc.perform(Selector(("loadEpisodesForShow:")), with: [])
+            DispatchQueue.main.async {
+                vc.perform(Selector(("loadEpisodesForShow:episodeArr:")), with: showId, with: arrDict)
+            }
         }
         
     }
@@ -90,21 +122,34 @@ extension Manager {
                         show.hasNewDownload = false
                         show.numberOfEpDownloaded -= 1
                         
+                        
+                        if let localFilePath = epInfo.localFilePath {
+                            DispatchQueue.global().async {
+                                AHFileTool.remove(filePath: localFilePath)
+                            }
+                            
+                        }
+
+                        
                         epInfo.downloadedProgress = 0.0
                         epInfo.unfinishedFilePath = nil
                         epInfo.localFilePath = nil
                         epInfo.isDownloaded = false
                         
                         
-                        DispatchQueue.global().async {
-                            if let localFilePath = epInfo.localFilePath {
-                                AHFileTool.remove(filePath: localFilePath)
-                            }
+                        
+                        do{
+                            try AHFMShow.update(model: show)
+                        }catch let error{
+                            print("AHFMDownloadCenterManager downloadedShowPageVC updating show:\(error)")
                         }
                         
+                        do{
+                            try AHFMEpisodeInfo.update(model: epInfo)
+                        }catch let error{
+                            print("AHFMDownloadCenterManager downloadedShowPageVC updating epInfo:\(error)")
+                        }
                         
-                        try? AHFMShow.update(model: show)
-                        try? AHFMEpisodeInfo.update(model: epInfo)
                     }
                     
                 }
@@ -117,14 +162,18 @@ extension Manager {
     /// Call loadDownloadedShows(_:) when ready
     /// Load all shows with at least one downloaded episode
     func downloadedVCLoadDownloadedShows(_ vc: UIViewController){
-        let shows = AHFMShow.query("numberOfEpDownloaded", ">", 0).run()
-        var showDict = [[String: Any]]()
-        for show in shows {
-            let dict = self.transformShowToDict(show: show)
-            showDict.append(dict)
+        AHFMShow.write {
+            let shows = AHFMShow.query("numberOfEpDownloaded", ">", 0).run()
+            var showArr = [[String: Any]]()
+            for show in shows {
+                let dict = self.transformShowToDict(show: show)
+                showArr.append(dict)
+            }
+            
+            DispatchQueue.main.async {
+                vc.perform(Selector(("loadDownloadedShows:")), with: showArr)
+            }
         }
-        
-        vc.perform(Selector(("loadDownloadedShows:")), with: showDict)
     }
     
     /// Delete all downloaded episodes for this showId
@@ -134,10 +183,25 @@ extension Manager {
                 // Delete files first so that you will still have their localFilePaths
                 let eps = AHFMEpisode.query("showId", "=", showId).run()
                 for ep in eps {
-                    if var epInfo = AHFMEpisodeInfo.query(byPrimaryKey: ep.id),var show = AHFMShow.query(byPrimaryKey: showId) {
+                    guard var epInfo = AHFMEpisodeInfo.query(byPrimaryKey: ep.id) else {
+                        continue
+                    }
+                    
+                    guard let progres  = epInfo.downloadedProgress else {
+                        continue
+                    }
+                    
+                    if progres > 99.99,var show = AHFMShow.query(byPrimaryKey: showId) {
                         show.totalFilesSize -= epInfo.fileSize ?? 0
                         show.hasNewDownload = false
                         show.numberOfEpDownloaded -= 1
+                        
+                        if let localFilePath = epInfo.localFilePath {
+                            DispatchQueue.global().async {
+                                AHFileTool.remove(filePath: localFilePath)
+                            }
+                        }
+                        
                         
                         epInfo.downloadedProgress = 0.0
                         epInfo.unfinishedFilePath = nil
@@ -145,15 +209,20 @@ extension Manager {
                         epInfo.isDownloaded = false
                         
                         
-                        DispatchQueue.global().async {
-                            if let localFilePath = epInfo.localFilePath {
-                                AHFileTool.remove(filePath: localFilePath)
-                            }
+                        
+                        
+                        
+                        do{
+                            try AHFMShow.update(model: show)
+                        }catch let error{
+                            print("AHFMDownloadCenterManager downloadedVC(shouldDeleteShow) updating show:\(error)")
                         }
                         
-                        
-                        try? AHFMShow.update(model: show)
-                        try? AHFMEpisodeInfo.update(model: epInfo)
+                        do{
+                            try AHFMEpisodeInfo.update(model: epInfo)
+                        }catch let error{
+                            print("AHFMDownloadCenterManager downloadedVC(shouldDeleteShow) updating epInfo:\(error)")
+                        }
                     }
                 }
             }
@@ -165,7 +234,12 @@ extension Manager {
         AHFMShow.write {
             if var show = AHFMShow.query(byPrimaryKey: showId) {
                 show.hasNewDownload = false
-                try? AHFMShow.update(model: show)
+                
+                do {
+                    try AHFMShow.update(model: show)
+                }catch let error {
+                    print("AHFMDownloadCenterManager downloadedVC(willEnterShowPageWithShowId) updating epInfo:\(error)")
+                }
             }
         }
         
@@ -174,16 +248,24 @@ extension Manager {
     /// Fetch the show that has an episode with that specific remote URL
     /// Call addHasNewDownloaded(_) when the data is ready
     func downloadedVC(_ vc: UIViewController, shouldFetchShowWithEpisodeRemoteURL url: String){
-        let eps = AHFMEpisode.query("audioURL", "=", url).run()
-        if eps.count > 0 , let ep = eps.first {
-            if let show = AHFMShow.query(byPrimaryKey: ep.showId) {
-                let showDict = self.transformShowToDict(show: show)
-                vc.perform(Selector(("addHasNewDownloaded:")), with: showDict)
-                return
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.2) { 
+            AHFMShow.write {
+                let eps = AHFMEpisode.query("audioURL", "=", url).run()
+                if eps.count > 0 , let ep = eps.first {
+                    if let show = AHFMShow.query(byPrimaryKey: ep.showId) {
+                        let showDict = self.transformShowToDict(show: show)
+                        DispatchQueue.main.async {
+                            vc.perform(Selector(("addHasNewDownloaded:")), with: showDict)
+                        }
+                        return
+                    }
+                }
+                
+                DispatchQueue.main.async {
+                    vc.perform(Selector(("addHasNewDownloaded:")), with: nil)
+                }
             }
         }
-        
-        vc.perform(Selector(("addHasNewDownloaded:")), with: nil)
     }
 }
 
@@ -192,6 +274,7 @@ extension Manager {
     /// Call addCurrentDownloads(_:)
     func downloadingVCGetCurrentDownloads(_ vc: UIViewController, urls: [String]){
         // get current download task
+        
         DispatchQueue.global().async {
             let urls = urls
             var currentArrDict = [[String: Any]]()
@@ -203,6 +286,7 @@ extension Manager {
                     currentArrDict.append(dict)
                 }
             }
+            print("currentArrDict download :\(currentArrDict.count)")
             DispatchQueue.main.async {
                 vc.perform(Selector(("addCurrentDownloads:")), with: currentArrDict)
             }
@@ -212,14 +296,23 @@ extension Manager {
         DispatchQueue.global().async {
             let urls = urls
             var archivedArrDict = [[String: Any]]()
-            let epInfoArr = AHFMEpisodeInfo.query("downloadedProgress", ">", 0.0).AND("isDownloaded", "=", false).run()
+            let epInfoArr = AHFMEpisodeInfo.query("downloadedProgress", ">", 0.0).AND("downloadedProgress", "<", 100.0).run()
             for epInfo in epInfoArr {
-                let eps = AHFMEpisode.query("audioURL", "NOT IN", urls).run()
-                if eps.count > 0, let ep = eps.first {
-                    let dict = self.merge(ep: ep, epInfo: epInfo)
-                    archivedArrDict.append(dict)
+                if urls.count > 0 {
+                    let eps = AHFMEpisode.query("id", "=", epInfo.id).AND("audioURL", "NOT IN", urls).run()
+                    if eps.count > 0, let ep = eps.first {
+                        let dict = self.merge(ep: ep, epInfo: epInfo)
+                        archivedArrDict.append(dict)
+                    }
+                }else{
+                    let eps = AHFMEpisode.query("id", "=", epInfo.id).run()
+                    if eps.count > 0, let ep = eps.first {
+                        let dict = self.merge(ep: ep, epInfo: epInfo)
+                        archivedArrDict.append(dict)
+                    }
                 }
             }
+            print("archived download :\(archivedArrDict.count)")
             DispatchQueue.main.async {
                 vc.perform(Selector(("addArchivedDownloads:")), with: archivedArrDict)
             }
@@ -239,13 +332,29 @@ extension Manager {
                     show.hasNewDownload = false
                     show.numberOfEpDownloaded -= 1
                     
+                    
+                    if let unfinishedFilePath = epInfo.unfinishedFilePath {
+                        DispatchQueue.global().async {
+                            AHFileTool.remove(filePath: unfinishedFilePath)
+                        }
+                    }
+                    
                     epInfo.downloadedProgress = 0.0
                     epInfo.unfinishedFilePath = nil
                     epInfo.localFilePath = nil
                     epInfo.isDownloaded = false
                     
-                    try? AHFMShow.update(model: show)
-                    try? AHFMEpisodeInfo.update(model: epInfo)
+                    do{
+                        try AHFMShow.update(model: show)
+                    }catch let error{
+                        print("AHFMDownloadCenterManager downloadedVC(shouldDeleteShow) updating show:\(error)")
+                    }
+                    
+                    do{
+                        try AHFMEpisodeInfo.update(model: epInfo)
+                    }catch let error{
+                        print("AHFMDownloadCenterManager downloadedVC(shouldDeleteShow) updating epInfo:\(error)")
+                    }
                 }
                 
             }
@@ -256,30 +365,49 @@ extension Manager {
 //MARK:- Data Transform
 extension Manager {
     // Show
-    //    self.id = dict["id"] as! Int
-    //    self.hasNewDownload = dict["hasNewDownload"] as! Bool
-    //    self.thumbCover = dict["thumbCover"] as! String
-    //    self.title = dict["title"] as! String
-    //    self.detail = dict["detail"] as! String
-    //    self.numberOfDownloaded = dict["numberOfDownloaded"] as! Int
-    //    self.totalDownloadedSize = dict["totalDownloadedSize"] as! Int
+//    self.id = dict["id"] as! Int
+//    self.hasNewDownload = dict["hasNewDownload"] as! Bool
+//    self.thumbCover = dict["thumbCover"] as! String
+//    self.title = dict["title"] as! String
+//    self.detail = dict["detail"] as! String
+//    self.numberOfDownloaded = dict["numberOfDownloaded"] as! Int
+//    self.totalDownloadedSize = dict["totalDownloadedSize"] as! Int
     
     func transformShowToDict(show: AHFMShow) -> [String: Any] {
-        return [:]
+        var dict = [String: Any]()
+        dict["id"] = show.id
+        dict["hasNewDownload"] = show.hasNewDownload
+        dict["thumbCover"] = show.thumbCover
+        dict["title"] = show.title
+        dict["detail"] = show.detail
+        dict["numberOfDownloaded"] = show.numberOfEpDownloaded
+        dict["totalDownloadedSize"] = show.totalFilesSize
+        return dict
     }
     
     // Episode
-    //    self.id = dict["id"] as! Int
-    //    self.showId = dict["showId"] as! Int
-    //    self.remoteURL = dict["remoteURL"] as! String
-    //    self.title = dict["title"] as! String
-    //    self.fileSize = dict["fileSize"] as? Int
-    //    self.duration = dict["duration"] as? TimeInterval
-    //    self.lastPlayedTime = dict["lastPlayedTime"] as? TimeInterval
-    //    self.downloadProgress = dict["id"] as? Double
+//    self.id = dict["id"] as! Int
+//    self.showId = dict["showId"] as! Int
+//    self.remoteURL = dict["remoteURL"] as! String
+//    self.title = dict["title"] as! String
+//    self.fileSize = dict["fileSize"] as? Int
+//    self.duration = dict["duration"] as? TimeInterval
+//    self.lastPlayedTime = dict["lastPlayedTime"] as? TimeInterval
+//    self.downloadedProgress = dict["downloadedProgress"] as? Double
     
     func merge(ep: AHFMEpisode, epInfo: AHFMEpisodeInfo?) -> [String: Any] {
-        return [:]
+        var dict = [String: Any]()
+        dict["id"] = ep.id
+        dict["showId"] = ep.id
+        dict["remoteURL"] = ep.audioURL
+        dict["title"] = ep.title
+        dict["duration"] = ep.duration
+        if let epInfo = epInfo {
+            dict["fileSize"] = epInfo.fileSize
+            dict["downloadedProgress"] = epInfo.downloadedProgress
+        }
+
+        return dict
     }
 }
 
