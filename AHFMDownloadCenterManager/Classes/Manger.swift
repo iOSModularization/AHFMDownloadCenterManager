@@ -12,6 +12,7 @@ import AHFMNetworking
 import AHFMDataTransformers
 import AHFMDownloadListServices
 import AHFMAudioPlayerVCServices
+import AHFMBottomPlayerServices
 import AHServiceRouter
 import AHDownloadTool
 
@@ -106,7 +107,8 @@ extension Manager {
     
     
     func downloadedShowPageVC(_ vc: UIViewController, editingModeDidChange isEditing: Bool){
-        print("should show or hide AHFMBottomPlayer")
+        let dict: [String: Any] = [AHFMBottomPlayerServices.keyShowPlayer: !isEditing, AHFMBottomPlayerServices.keyParentVC: vc]
+        AHServiceRouter.doTask(AHFMBottomPlayerServices.service, taskName: AHFMBottomPlayerServices.taskDisplayPlayer, userInfo: dict, completion: nil)
     }
     
     
