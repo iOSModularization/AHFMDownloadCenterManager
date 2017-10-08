@@ -16,7 +16,7 @@ public struct AHFMSubscribedShow {
 extension AHFMSubscribedShow: AHDataModel {
     public static func columnInfo() -> [AHDBColumnInfo] {
         let id = AHDBColumnInfo(name: "id", type: .integer, constraints: "primary key")
-        let addedAt = AHDBColumnInfo(name: "text", type: .real)
+        let addedAt = AHDBColumnInfo(name: "addedAt", type: .real)
         return [id,addedAt]
     }
     

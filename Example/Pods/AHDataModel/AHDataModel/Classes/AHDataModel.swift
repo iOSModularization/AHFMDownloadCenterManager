@@ -106,7 +106,7 @@ extension AHDataModel {
         }
         checkDatabaseSetup()
         let tableName = Self.tableName()
-        let sql = "SELECT * FROM \(tableName)"
+        let sql = "SELECT * FROM \(tableName) "
         let query = AHDataModelQuery<Self>(rawSQL: sql, db: db)
         query.attributes = []
         return query
@@ -564,7 +564,7 @@ internal struct AHDBHelper {
         }else if value is Bool {
             type = .integer
         }else {
-            fatalError("Unsupported value:\(String(describing: value)) with type:\(type(of: value))")
+            return nil
         }
         return type
     }
@@ -578,7 +578,11 @@ internal struct AHDBHelper {
             if Operator.lowercased().contains("in") {
                 for (i,value) in valueArr.enumerated() {
                     if i == 0 {
-                        sql += "(?,"
+                        if valueArr.count == 1 {
+                            sql += "(?)"
+                        }else{
+                            sql += "(?,"
+                        }
                     }else if i == valueArr.count - 1 {
                         sql += "?)"
                     }else{

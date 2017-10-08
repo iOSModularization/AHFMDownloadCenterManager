@@ -43,7 +43,7 @@ extension AHFMEpisodeInfo: AHDataModel {
         let unfinishedFilePath = AHDBColumnInfo(name: "unfinishedFilePath", type: .text)
         let fileSize = AHDBColumnInfo(name: "fileSize", type: .integer)
         let lastPlayedTime = AHDBColumnInfo(name: "lastPlayedTime", type: .real)
-        let downloadedProgress = AHDBColumnInfo(name: "downloadedProgress", type: .integer)
+        let downloadedProgress = AHDBColumnInfo(name: "downloadedProgress", type: .real)
         let isDownloaded = AHDBColumnInfo(name: "isDownloaded", type: .integer)
         
         return [id,localFilePath,unfinishedFilePath,fileSize,lastPlayedTime,downloadedProgress,isDownloaded]
@@ -58,7 +58,7 @@ extension AHFMEpisodeInfo: AHDataModel {
         self.downloadedProgress = dict["downloadedProgress"] as? Double
         
         let isDownloaded = dict["isDownloaded"] as? Int
-        self.isDownloaded = isDownloaded == nil ? Bool(isDownloaded) : nil
+        self.isDownloaded = isDownloaded != nil ? Bool(isDownloaded) : nil
     }
     
     public static func tableName() -> String{

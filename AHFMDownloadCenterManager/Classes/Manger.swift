@@ -13,6 +13,7 @@ import AHFMDataTransformers
 import AHFMDownloadListServices
 import AHFMAudioPlayerVCServices
 import AHFMBottomPlayerServices
+import AHFMShowPageServices
 import AHServiceRouter
 import AHDownloadTool
 
@@ -78,7 +79,14 @@ extension Manager {
     }
     
     func downloadedVCShowPage(_ vc: UIViewController, didSelectShow showId: Int){
-        print("should go to AHFMShowPage")
+        guard let navVC = vc.navigationController else {
+            return
+        }
+        
+        let type = AHServiceNavigationType.push(navVC: navVC)
+        
+        let info: [String : Any] = [AHFMShowPageServices.keyShowId: showId]
+        AHServiceRouter.navigateVC(AHFMShowPageServices.service, taskName: AHFMShowPageServices.taskNavigation, userInfo: info, type: type, completion: nil)
     }
     
     func downloadedVCShowPage(_ vc: UIViewController, didSelectEpisode episodeId: Int, showId: Int){

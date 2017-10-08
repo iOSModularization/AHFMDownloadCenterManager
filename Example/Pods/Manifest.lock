@@ -1,16 +1,16 @@
 PODS:
-  - AHDataModel (0.3.2)
-  - AHDownloadTool (0.1.9)
+  - AHDataModel (0.4.1)
+  - AHDownloadTool (0.1.10)
   - AHFMAudioPlayerVCServices (0.1.0):
     - AHFMServices
   - AHFMBottomPlayerServices (0.1.0):
     - AHFMServices
-  - AHFMDataCenter (0.1.2):
+  - AHFMDataCenter (0.1.5):
     - AHDataModel
     - UIDeviceExtension
   - AHFMDataTransformers (0.1.0):
     - SwiftyJSON
-  - AHFMDownloadCenterManager (0.2.0):
+  - AHFMDownloadCenterManager (0.2.1):
     - AHDownloadTool
     - AHFMAudioPlayerVCServices
     - AHFMBottomPlayerServices
@@ -20,6 +20,7 @@ PODS:
     - AHFMDownloadListServices
     - AHFMModuleManager
     - AHFMNetworking
+    - AHFMShowPageServices
     - AHServiceRouter
   - AHFMDownloadCenterServices (0.1.0):
     - AHFMServices
@@ -30,7 +31,9 @@ PODS:
     - Alamofire (~> 4.4)
     - KeychainAccess (~> 3.0.2)
   - AHFMServices (0.3.0)
-  - AHServiceRouter (0.3.0)
+  - AHFMShowPageServices (0.1.2):
+    - AHFMServices
+  - AHServiceRouter (0.5.3)
   - Alamofire (4.5.1)
   - KeychainAccess (3.0.2)
   - SwiftyJSON (3.1.4)
@@ -44,19 +47,20 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  AHDataModel: 7b7b1eb705740862fecce8413008ed137dc2c8d2
-  AHDownloadTool: 6cc35cb56f0ee956df5b0d225e1b1d66059b7342
+  AHDataModel: b125e87955b1c57c6d07ae824d5c5f559cea433a
+  AHDownloadTool: d942add9da4ab4f87f82d3d63bb194a5631e9bb0
   AHFMAudioPlayerVCServices: 27bdded45ce340f6bf0265264e64ee2fd26f6d57
   AHFMBottomPlayerServices: 62e83815ed8969376d047556382931cc46841de5
-  AHFMDataCenter: 1ed58c19944bb34ba1ad83c20f2e1c01d4f7291f
+  AHFMDataCenter: aaa9092d09ccfc28163dbf9dfcb5aa89d9619727
   AHFMDataTransformers: eafcb87a307fbd52ccd61917fa5de1aff6a7bd53
-  AHFMDownloadCenterManager: 60d49f8583ad500a3ae61994822e346273bedd51
+  AHFMDownloadCenterManager: bcf07dadd512418f77423018b9cb1a74f872cbc2
   AHFMDownloadCenterServices: 23cf7d1977796512206391c344b8b1e95d1e3b05
   AHFMDownloadListServices: 5409157c9dfe981f7f88027672d217ba505ed9ba
   AHFMModuleManager: 301c8a5945a301528d5cba55e4809428ef896141
   AHFMNetworking: e2b524c569fc4ec0f2583ac607f355a22fe1a46f
   AHFMServices: 7c2c52fd7bd0b604fdab05cc9adb13129c218b60
-  AHServiceRouter: 665bd7a43fc58632477dfea53d6850043224cbd9
+  AHFMShowPageServices: f5bc995a70d155194528652563ebaf3b94f96fb3
+  AHServiceRouter: b7b49e712cf8d697ded8c48151cfcd2ee103a562
   Alamofire: 2d95912bf4c34f164fdfc335872e8c312acaea4a
   KeychainAccess: a986406022dfc7c634c691ad3bec670cc6a32002
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220

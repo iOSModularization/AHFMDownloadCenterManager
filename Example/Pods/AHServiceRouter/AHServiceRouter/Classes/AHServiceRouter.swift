@@ -177,7 +177,7 @@ public final class AHServiceRouter {
                     let navVC = UINavigationController(rootViewController: vc)
                     currentVC.present(navVC, animated: true, completion: nil)
                 case let .push(navVC):
-                    navVC.pushViewController(vc, animated: true)
+                    pushVC(targetVC: vc, navVC: navVC)
             }
             completion?(true, nil)
         }else{
@@ -185,6 +185,81 @@ public final class AHServiceRouter {
         }
         
         
+    }
+    
+    /// Reuse a VC from a navigationVC, default is the first navigationVC under the application's rootVC, or just the rootVC if it is a navigationVC.
+    public static func reuseVC(navigationVC: UINavigationController? = nil,_ shouldBeReused: (_ currentVC: UIViewController) -> Bool) -> UIViewController? {
+        
+
+        if navigationVC == nil {
+            guard let delegate = UIApplication.shared.delegate,
+                let window = delegate.window,
+                let rootVC = window?.rootViewController as? UINavigationController else {
+                    assert(false, "application delegate or window is nil???")
+                    return nil
+            }
+            var firstNavVC: UINavigationController?
+            firstNavVC = rootVC.isKind(of: UINavigationController.self) ? rootVC : nil
+            
+            if firstNavVC == nil {
+                for vc in rootVC.viewControllers {
+                    if vc.isKind(of: UINavigationController.self) {
+                        firstNavVC = vc as? UINavigationController
+                        break
+                    }
+                }
+            }
+            
+            guard let navVC = firstNavVC else {
+                return nil
+            }
+            
+            let reversedVCs = navVC.viewControllers.reversed()
+            var newVC: UIViewController?
+            for vc in reversedVCs {
+                if shouldBeReused(vc) {
+                    newVC = vc
+                    break
+                }
+            }
+            
+            
+            return newVC
+            
+        }else{
+            let reversedVCs = navigationVC!.viewControllers.reversed()
+            var newVC: UIViewController?
+            for vc in reversedVCs {
+                if shouldBeReused(vc) {
+                    newVC = vc
+                    break
+                }
+            }
+            
+            
+            return newVC
+        }
+        
+        
+        
+    }
+
+    
+    private static func pushVC(targetVC: UIViewController, navVC: UINavigationController) {
+        // there's this vc in the stack already, then pop to it
+        var newVC: UIViewController?
+        for childVC in navVC.viewControllers {
+            if childVC === targetVC {
+                newVC = childVC
+                break
+            }
+        }
+        
+        if newVC == nil {
+            navVC.pushViewController(targetVC, animated: true)
+        }else{
+            navVC.popToViewController(newVC!, animated: true)
+        }
     }
     
     public static func allServices() -> [String] {
